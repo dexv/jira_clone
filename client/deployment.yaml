@@ -1,0 +1,43 @@
+# Configuración usando solo un archivo yml.
+
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: proyecto-final
+  name: react-deploy
+  labels:
+    rol: frontend
+spec:
+  replicas: 3
+  selector:
+    #Estas etiquetas identifican a los pods asociados a este deployment
+    matchLabels:
+      rol: frontend
+  template:
+    # Este es un PodTemplate
+    metadata:
+      labels:
+        rol: frontend 
+    spec:
+      containers:
+        - name: react-container
+          image: react-img
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: proyecto-final
+  name: react-service
+spec:
+  ports:
+    - name: http-frontend
+      port: 8088
+      targetPort: 80 
+  selector:
+    rol: frontend
+  type: LoadBalancer

@@ -1,0 +1,79 @@
+# Configuración usando solo un archivo yml.
+
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: proyecto-final
+  name: node-deploy
+  labels:
+    rol: backend
+spec:
+  replicas: 3
+  selector:
+    #Estas etiquetas identifican a los pods asociados a este deployment
+    matchLabels:
+      rol: backend
+  template:
+    # Este es un PodTemplate
+    metadata:
+      labels:
+        rol: backend 
+    spec:
+      containers:
+        - name: node-container
+          image: node-img
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: NODE_ENV
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: DB_PORT
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: DB_PASSWORD
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: DB_DATABASE
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jira-credentials
+                  key: JWT_SECRET
+          ports:
+            - containerPort: 3000
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: proyecto-final
+  name: node-service
+spec:
+  ports:
+    - name: http-backend
+      port: 3000
+      targetPort: 3000 
+  selector:
+    rol: backend
+  type: LoadBalancer

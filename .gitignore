@@ -6,7 +6,11 @@
 
 # environment config
 **/.env
+**/.env.resp
 
 # production
 **/build
 **/npm-debug.log*
+
+# docker & kubernetes
+**/secret.yaml
