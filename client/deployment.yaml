@@ -9,7 +9,7 @@ metadata:
   labels:
     rol: frontend
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     #Estas etiquetas identifican a los pods asociados a este deployment
     matchLabels:
